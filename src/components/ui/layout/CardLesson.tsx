@@ -26,31 +26,33 @@ function CardLesson({
   const availableAtFormatted = format(availableAt, "EEEE' • 'd' de 'MMMM' • 'k'h'mm", {
     locale: ptBR,
   })
+
+  const isActiveLesson = slug === slugParam
   return (
     <Link
       to={`/event/lesson/${slug}`}
       className={classNames('group', className)}
       {...restProps}
     >
-      <span className={classNames('text-gray-300')}>
-        {/* Terça • 22 de junho • 19h00
-         */}
-        {availableAtFormatted}
-      </span>
+      <span className={classNames('text-gray-300')}>{availableAtFormatted}</span>
       <div
         className={classNames(
           'rounded border border-gray-500 group-hover:border-green-500',
           'p-4 mt-2',
           'transition-colors',
-          slugParam === slug && 'border-green-500'
+          isActiveLesson && 'bg-green-500'
         )}
       >
         <header className="flex items-center justify-between">
           <span
             className={classNames(
               'flex items-center',
-              'text-sm text-blue-500 font-medium',
-              isLessonAvailable ? 'text-blue-500' : 'text-orange-500'
+              'text-sm font-medium',
+              isActiveLesson
+                ? 'text-white'
+                : isLessonAvailable
+                ? 'text-blue-500'
+                : 'text-orange-500'
             )}
           >
             {isLessonAvailable ? (
@@ -68,16 +70,21 @@ function CardLesson({
           <span
             className={classNames(
               'text-xs text-white font-bold',
-              'rounded',
-              'border border-green-300',
-              'py-[0.125rem] px-2'
+              'rounded border',
+              'py-[0.125rem] px-2',
+              isActiveLesson ? 'border-white' : 'border-green-300'
             )}
           >
             {isLive ? 'AO VIVO' : 'AULA PRÁTICA'}
           </span>
         </header>
 
-        <strong className={classNames('block text-gray-200 mt-5')}>{title}</strong>
+        <strong
+          className={classNames('block text-gray-200 mt-5 line-clamp-1')}
+          title={title}
+        >
+          {title}
+        </strong>
       </div>
     </Link>
   )
