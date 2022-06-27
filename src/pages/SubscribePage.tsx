@@ -5,28 +5,21 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../components/form/Button'
 import InputText from '../components/form/InputText'
 import { LogoIcon } from '../components/icons/LogoIcon'
+import { useCreateSubscriberMutation } from '../graphql/generated-types'
 
-const CREATE_SUBSCRIPTION_MUTATION = gql`
-  mutation CreateSubscriber($name: String!, $email: String!) {
-    createSubscriber(data: { name: $name, email: $email }) {
-      id
-    }
-  }
-`
 function SubscribePage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
 
   const navigate = useNavigate()
 
-  const [createSubscriber, { loading: submitingSubscriber }] = useMutation<{
-    createSubscriber: { id: string }
-  }>(CREATE_SUBSCRIPTION_MUTATION, {
-    variables: { name, email },
-    onCompleted: () => {
-      navigate('/event')
-    },
-  })
+  const [createSubscriber, { loading: submitingSubscriber }] =
+    useCreateSubscriberMutation({
+      variables: { name, email },
+      onCompleted: () => {
+        navigate('/event')
+      },
+    })
 
   const handleSubmitForm = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
